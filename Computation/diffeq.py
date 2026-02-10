@@ -100,44 +100,29 @@ def rk4(func,a=0.,b=10.,N=100):
     return tpoints, xpoints
 
 def radau2(func, a=0., b=10., N=100):
-    """Computes solution using Radau IIA (Implicit Runge-Kutta) method
+    """1-stage Radau IIA method (implicit, 3rd order, L-stable)
     
-    Parameters
-    ----------
-    func  : lambda function
-        First derivative expression
-    a, b  : float
-        Interval of solution
-    N : int
-        Number of steps
+    Solves dx/dt = f(x,t) using implicit evaluation at right endpoint.
+    This is the simplest Radau IIA method.
     """
     h = (b - a) / N
     tpoints = np.linspace(a, b, N)
     xpoints = []
     
-    # Initial condition
     x = 0.0  
     xpoints.append(x)
 
     for t in tpoints[:-1]:
-        # Implicit Radau formula
+        # Implicit equation: x_new = x + h*f(x_new, t+h)
         def implicit_eq(x_new):
-            return x_new - x - h * func(0.75 * x_new + 0.25 * x, t + 0.75 * h)
+            return x_new - x - h * func(x_new, t + h)
 
         # Solve for x_new
-        x_new = fsolve(implicit_eq, x)[0]
+        x_new = fsolve(implicit_eq, x)[0]  # Initial guess: x
         xpoints.append(x_new)
         x = x_new
 
-    # Plot solution
-    plt.plot(tpoints, xpoints, label="Radau IIA")
-    plt.xlabel("t")
-    plt.ylabel("x(t)")
-    plt.legend()
-    plt.grid()
-    plt.show()
-
-    return tpoints, xpoints
+    return np.array(tpoints), np.array(xpoints)
 
 
 def bdf2(func, a=0., b=10., N=100):
@@ -244,3 +229,16 @@ def lsoda_approx(func, a=0., b=10., N=100, tol=1e-3):
     plt.show()
 
     return tpoints, xpoints
+
+
+
+# Define ODE: dx/dt = -2x + cos(t)
+f = lambda x, t: -2*x + np.cos(t)
+
+# Compare methods
+t1, x1 = euler(f, a=0., b=5., N=100)
+t2, x2 = rk2(f, a=0., b=5., N=100)
+t3, x3 = rk4(f, a=0., b=5., N=100)
+t4, x4 = radau2(f, a=0., b=5., N=100)
+t5, x5 = bdf2(f, a=0., b=5., N=100)
+t6, x6 = lsoda_approx(f, a=0., b=5., N=100, tol=1e-3)
