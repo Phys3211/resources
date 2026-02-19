@@ -24,9 +24,9 @@ def euler(func, a=0., b=10., N=100):
     # initial condition
     x = 0
     tpoints = np.arange(a,b,h)
-    xpoints = []
+    xpoints = np.zeros(N)
     for t in tpoints:
-        xpoints.append(x)
+        xpoints[]=x
         x += h*func(x,t)
     #plots solution
     plt.plot(tpoints,xpoints)
