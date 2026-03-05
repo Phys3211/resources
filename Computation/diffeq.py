@@ -37,7 +37,7 @@ def euler(func, a=0., b=10., N=100):
     return tpoints, xpoints
     
 
-def rk2(func,a=0.,b=10.,N=100):
+def rk2(func,a=0.,b=10.,N=100, flag = 0):
     """Computes solution using 2nd order runge kutta method
     
     Parameters
@@ -60,6 +60,7 @@ def rk2(func,a=0.,b=10.,N=100):
         k1 = h*func(x,t)
         k2 = h*func(x+0.5*k1,t+0.5*h)
         x += k2
+    if flag ==1
     #plots solution
     plt.plot(tpoints,xpoints)
     plt.xlabel("t")
@@ -67,7 +68,7 @@ def rk2(func,a=0.,b=10.,N=100):
     plt.show()
     return tpoints, xpoints
 
-def rk4(func,a=0.,b=10.,N=100):
+def rk4(func,a=0.,b=10.,N=100, x0):
     """Computes solution using 4th order runge kutta method
     
     Parameters
